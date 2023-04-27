@@ -11,9 +11,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-/**
- * Created by ash on 14/2/18.
- */
 
 public class WifiBroadcastReceiver extends BroadcastReceiver {
     public static final String TAG = "===WifiBReceiver";
@@ -65,33 +62,13 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
             }
             NetworkInfo networkInfo = intent
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            //WifiP2pInfo p2pInfo = intent
-            //        .getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO);
-
-            //if (p2pInfo != null && p2pInfo.groupOwnerAddress != null) {
-            //    String goAddress = Utils.getDottedDecimalIP(p2pInfo.groupOwnerAddress
-            //            .getAddress());
-            //    boolean isGroupOwner = p2pInfo.isGroupOwner;
-           //     Log.d(WifiBroadcastReceiver.TAG,"I am a group owner");
-           // }
             if (networkInfo.isConnected()) {
                 try {
                     mActivity.setStatusView(Constants.NETWORK_CONNECT);
-                    /*if(!mActivity.IS_OWNER) {  //as soon as the two devices connect, the client sends a default message to the server and the clientSocketListener starts listening
-                        mActivity.isRequest = false;
-                        //mActivity.closeSocketAndInterrupt();
-                        //sleep(1000);
-                        String connectionMessage = "~~connectionMessage~~";
-                        ClientSocket clientSocket = new ClientSocket(mActivity, mActivity, connectionMessage, mActivity.isRequest, null, null, null, mActivity.clientSocketListener);
-                        clientSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        mActivity.startClientSocketListener();
-                    }*/
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                // we are connected with the other device, request connection
-                // info to find group owner IP
-                //mManager.requestConnectionInfo(mChannel, mActivity);
             } else {
                 // It's a disconnect
                 Log.d(WifiBroadcastReceiver.TAG,"Its a disconnect");
@@ -101,7 +78,6 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
                     e.printStackTrace();
                 }
 
-                //activity.resetData();
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             Log.d(WifiBroadcastReceiver.TAG,"WIFI_P2P_THIS_DEVICE_CHANGED_ACTION");
