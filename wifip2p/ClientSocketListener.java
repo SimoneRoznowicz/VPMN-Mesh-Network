@@ -33,7 +33,7 @@ public class ClientSocketListener extends AsyncTask {
         if(clSocket==null) {
             System.out.println("clSocket E' NULL");
         }
-        //Thread.sleep(1000);
+        
         int a=0;
         long timeInitial = System.currentTimeMillis();
         while(!ClientSocket.isSocketCreated){
@@ -72,53 +72,6 @@ public class ClientSocketListener extends AsyncTask {
 
     private void listen() throws IOException, InterruptedException {
         while(!interrupted) {
-            //System.out.println("ClientSocketListener: step 1");
-            //System.out.println("LISTEN");
-
-            //while(!activity.socket.isConnected()){}
-
-            //System.out.println("ClientSocketListener: step 2");
-
-            //fSystem.out.println("LISTEN");
-            /*if(clientSocket==null){
-                System.out.println("NULLO CLIENTSOCKET");
-            }
-            if(clientSocket.getSocket()==null){
-                System.out.println("NULLO clientSocket.getSocket()");
-            }*/
-            //if(activity.socket.getInputStream()==null){
-            //    System.out.println("NULLO clientSocket.getSocket().getInputStream()");
-            //}
-            //System.out.println("0 Socket is closed??" + activity.socket.isClosed());
-
-
-
-            //System.out.println("ClientSocketListener: step 1");
-
-            //System.out.println("1 Socket is closed??" + activity.socket.isClosed());
-            /*if(bufferedReader != null){
-                System.out.println("bufferedReader diverso da null");
-                //bufferedReader.close();
-            }*/
-            /*if(bufferedReader.readLine()==null){
-                System.out.println("LISTEN3 XXX");
-                continue;
-            }*/
-            /*System.out.println("2 Socket is closed??" + activity.socket.isClosed());
-
-            System.out.println("LISTEN1");
-            StringBuilder sb = new StringBuilder();
-            String line = "";
-            System.out.println("3 Socket is closed??" + activity.socket.isClosed());
-
-
-            if(bufferedReader==null){
-                System.out.println("LISTEN3");
-                continue;
-            }
-            System.out.println("4 Socket is closed??" + activity.socket.isClosed());
-            System.out.println("ClientSocketListener appena prima: step 1: numero bytes da leggere inputstream == " + inputstream.available());
-            */
             Thread.sleep(500);
             while(!MainActivity.socket.isConnected()){
                 //System.out.println("dentro isconnected while");
@@ -150,20 +103,6 @@ public class ClientSocketListener extends AsyncTask {
             if (!line.equals("")) {
                 listener.onUpdate(line);
             }
-
-            /*
-            int j=0;
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println("LISTEN WHILE");
-                sb.append(line);
-            }
-
-            System.out.println("LISTEN2");
-            bufferedReader.close();
-            String receivedData = sb.toString();
-            System.out.println("QUESTO E' IL MESSAGGIO MANDATO DAL SERVER AL CLIENT == " + line);
-            */
-
         }
         System.out.println("CLIENTSOCKETLISTENER: HO SMESSO DI ASCOLTARE");
         interrupted = false;
