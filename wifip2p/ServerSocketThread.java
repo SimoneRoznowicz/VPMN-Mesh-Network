@@ -16,10 +16,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * Created by ash on 16/2/18.
- */
-
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class ServerSocketThread extends AsyncTask {
 
@@ -56,39 +52,16 @@ public class ServerSocketThread extends AsyncTask {
                 client = serverSocket.accept();
                 if(bufferedReader != null){
                     Log.d(ServerSocketThread.TAG,"bufferedReader diverso da null");
-                    //bufferedReader.close();
                 }
-                //Log.d(ServerSocketThread.TAG,"0 client e' closed? " + client.isClosed());
-                //Log.d(ServerSocketThread.TAG,"Accepted Connection");
                 InputStream inputstream = client.getInputStream();
-                //Log.d(ServerSocketThread.TAG,"0.1 client e' closed? " + client.isClosed());
                 bufferedReader = new BufferedReader(new InputStreamReader(inputstream));
-                //Log.d(ServerSocketThread.TAG,"0.2 client e' closed? " + client.isClosed());
-                //StringBuilder sb = new StringBuilder();
-                //Log.d(ServerSocketThread.TAG,"0.3 client e' closed? " + client.isClosed());
-                //gLog.d(ServerSocketThread.TAG,"string line");
-                /*while ((line = bufferedReader.readLine()) != null) {
-                    Log.d(ServerSocketThread.TAG,"string line nel while");
-                    sb.append(line);
-                }*/
-                //System.out.println("ServerSocketThread: step 1: numero bytes da leggere inputstream == " + inputstream.available());
                 String line = bufferedReader.readLine();
-                //Log.d(ServerSocketThread.TAG,"0.4 client e' closed? " + client.isClosed());
-
-                //bufferedReader.close();           QUESTO E' L'ERRORE: CHIUDENDO BUFFERREADER CHIUDO ANCHE IL SOCKET!!!!
-                //Log.d(ServerSocketThread.TAG,"0.5 client e' closed? " + client.isClosed());
-                //Log.d(ServerSocketThread.TAG,"Completed ReceiveDataTask");
-                //receivedData = sb.toString();
-                //Log.d(ServerSocketThread.TAG,"1 client e' closed? " + client.isClosed());
                 if(line == null) continue;
                 String line1 = line;
                 if (listener != null) {
-                    //Log.d(ServerSocketThread.TAG,"SERVERSOCKETTHREAD: LISTENER ON UPDATE");
                     listener.onUpdate(line);
-                    //Log.d(ServerSocketThread.TAG,"2 client e' closed? " + client.isClosed());
                 }
                 Log.d(ServerSocketThread.TAG," ================ " + line);
-                //I'm owner here
                 if(line1.equals("~~connectionMessage~~")) {    //when I receive a default message I send what I have in the request
                     if (!requestMessage.equals("")) {
                         DataOutputStream dataOutputStream = new DataOutputStream(client.getOutputStream());
