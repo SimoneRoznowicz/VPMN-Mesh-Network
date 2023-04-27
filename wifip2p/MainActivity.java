@@ -30,9 +30,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-//import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -86,42 +83,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView textViewReceivedData;
     TextView textViewReceivedDataStatus;
 
-    ///////////////// AGGIUNTE
     TextView textViewNameDestination;
     TextView textViewNameDestination1;
     TextView textViewIDDestination;
     EditText EditIDDestination;
     TextView textViewRequest;
     TextView textViewRequestDestination;
-    /////////////////
 
     public static String IP = null;
-    ///////////////////
     public static String IP_server = null;
     public static String IP_client = null;
     public static String IP_MIO = null;
     public static String IP_MAMMA = null;
     public static String hostClient = null;
     public static String IP_address = null;
+    
     Map<WifiP2pDevice,String> map = new HashMap<>();     //map containing as IP address as Value (String), the device as Key (WifiP2pDevice)
     ArrayList<MyEntry> arrList = new ArrayList<MyEntry>();
     String seenDevices = "";
     public boolean isRequest = false;
     public boolean isFirst = true;
-    ///////////////////
     public static boolean IS_OWNER = false;
-
     static boolean  stateDiscovery = false;
     static boolean stateWifi = false;
     public static boolean stateConnection = false;
+    
     ClientSocketListener clientSocketListener = null;
     ClientSocket clientSocket = null;
     public static Socket socket;
     public static boolean ignoreChange = false;
-
+    
     ServerSocketThread serverSocketThread = null;
-    static final int MESSAGE_READ=1;   //FORSE NON SERVE
-
+    static final int MESSAGE_READ=1;   
 
     ArrayAdapter mAdapter;
     WifiP2pDevice[] deviceListItems;
@@ -135,8 +128,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = new WifiBroadcastReceiver(mManager, mChannel, this);
-
-        //serverSocketThread = new ServerSocketThread();
     }
 
 
@@ -181,14 +172,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         editTextTextInput = findViewById(R.id.main_acitivity_input_text);
 
-        //////////////////// AGGIUNTE
-        //textViewNameDestination = findViewById(R.id.main_activity_textView_name_destination);
-        //textViewNameDestination1 = findViewById(R.id.main_activity_textView_name_destination1);
         textViewIDDestination = findViewById(R.id.main_activity_textView_ID_destination);
         EditIDDestination = findViewById(R.id.main_activity_edit_ID_destination);
         textViewRequest = findViewById(R.id.main_activity_textView_request);
-        //textViewRequestDestination = findViewById(R.id.main_activity_textView_request_destination);
-        ////////////////////
 
         buttonServerStart.setOnClickListener(this);
         buttonServerStop.setOnClickListener(this);
@@ -208,9 +194,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textViewReceivedData.setVisibility(View.INVISIBLE);
         buttonConfigure.setVisibility(View.VISIBLE);
 
-
-
-        ///////////***********
         buttonClientStop.setVisibility(View.VISIBLE);
         buttonClientStart.setVisibility(View.VISIBLE);
         editTextTextInput.setVisibility(View.VISIBLE);
@@ -218,9 +201,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonServerStart.setVisibility(View.VISIBLE);
         textViewReceivedData.setVisibility(View.VISIBLE);
         textViewReceivedDataStatus.setVisibility(View.VISIBLE);
-        ///////////***********
-
-
 
         listViewDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -230,21 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-/*
-    Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(@NonNull Message msg) {
-            switch(msg.what){
-                case MESSAGE_READ:
-                    byte[] readBuff = (byte[]) msg.obj;
-                    String tempMsg = new String(readBuff, 0, msg.arg1);
-                    textViewReceivedData.setText(tempMsg);
-                    break;
-            }
-            return true;
-        }
-    });
-*/
+
     private void discoverPeers()
     {
         Log.d(MainActivity.TAG,"discoverPeers()");
@@ -256,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(MainActivity.TAG,"peer discovery started");
                 makeToast("peer discovery started");
                 MyPeerListener myPeerListener = new MyPeerListener(MainActivity.this);
-                //mManager.requestPeers(mChannel,myPeerListener);
             }
 
             @Override
@@ -276,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-//        requestConnection();
         System.out.println("hostclient is == " + hostClient);
     }
 
@@ -372,7 +336,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(MainActivity.TAG, "Connected to :" + device.deviceName);
                 Toast.makeText(getApplication(),"Connection successful with::: " + device.deviceName,Toast.LENGTH_SHORT).show();
                 System.out.println("SERVERSOCKETTHREAD E' NULL??? " + serverSocketThread == null);
-                //buttonConfigure.performClick();
             }
 
             @Override
@@ -447,40 +410,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 stateConnection = true;
                 makeToast("It's a connect");
 
-                //while(hostClient == null) {
-                    //mManager.requestConnectionInfo(mChannel, this);
-                //}
-                //mManager.requestConnectionInfo(mChannel,this);
-                /*
-                System.out.println("hostclient is == " + hostClient);
-                if(IS_OWNER) {//attivo server listener
-                    serverSocketThread = new ServerSocketThread();
-                    serverSocketThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    System.out.println("serversocketthread");
-                    serverSocketThread.setUpdateListener(new ServerSocketThread.OnUpdateListener() {
-                        public void onUpdate(String obj) {
-                            setReceivedText(obj);
-                        }
-                    });
-                }
-
-                if(!IS_OWNER){  //as soon as the two devices connect, the client sends a default message to the server and the clientSocketListener starts listening
-                    isRequest = false;
-                    closeSocketAndInterrupt();
-                    //sleep(1000);
-                    String connectionMessage = "~~connectionMessage~~";
-                    //sleep(1000);
-                    //mManager.requestConnectionInfo(mChannel, this);
-                    while(hostClient == null){
-                        sleep(400);
-                        mManager.requestConnectionInfo(mChannel,this);
-                    }
-                    ClientSocket clientSocket = new ClientSocket(MainActivity.this, this, connectionMessage, isRequest, null, null, null, clientSocketListener);
-                    clientSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                    startClientSocketListener();
-                }
-                */
                 textViewConnectionStatus.setText("Connected");
                 break;
             case Constants.NETWORK_DISCONNECT:
@@ -511,7 +440,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.main_activity_button_connect:
 
-                ///////////////// nell'inoltro cambia la destination
                 //AGGIUNTA: quando faccio click su connect, non guardo solo se c'è un dispositivo
                 // connesso ma anche se non è stato scritto niente nella casella request
                 String requestDestination = EditIDDestination.getText().toString();
@@ -519,29 +447,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(MainActivity.this,"Please discover and select a device OR write the destination below",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                /*
-                else if(device == null && !requestDestination.equals("")) {  //Didn't select a device, wrote destination
-                    //ottenere la lista di dispositivi e connettersi a tutti
-                    boolean found = false;
-                    for(int i = 0; i < deviceListItems.length; i++) {
-                        if(deviceListItems[i].deviceName.equals(requestDestination)){      //what was written in the request was, in reality, the name of a device present in the list
-                            device = deviceListItems[i];
-                            System.out.println("******* 1");
-                            connect(device);
-                            isRequest = false;
-                            break;
-                        }
-                        if(!found) {
-                            Toast.makeText(MainActivity.this,"Request is necessary, click on SEND button",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                else {    */                                                   //Selected a device, didn't write anything
-                System.out.println("******* 2");
+                
+                //System.out.println("******* 2");
                 connect(device);
 
                 System.out.println("serversocketthread e' null?? " + serverSocketThread == null);
-                /** POSSO METTERE NEW SERVERSOCEKETTHREAD IN ONCREATE**/
                 if(serverSocketThread == null) {
                     System.out.println("entro1");
                     if (IS_OWNER) {//attivo server listener
@@ -556,38 +466,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                     }
                 }
-                    /*if(!IS_OWNER) {
-                        closeSocketAndInterrupt();
-                        String connectionMessage = "~~connectionMessage~~";
-                        ClientSocket clientSocket = new ClientSocket(MainActivity.this, this, connectionMessage, isRequest, null, null, null, clientSocketListener);
-                        clientSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        startClientSocketListener();
-                    }*/
-                    //send an empty message in order to get the IP address
-                    ///////////////////////////////////////////////////////////////////////////////////////
-                    //mManager.requestConnectionInfo(mChannel,this);
-                    //ClientSocket clientSocket = new ClientSocket(MainActivity.this, this, "", false, null);
-                    //clientSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                //}
+                   
                 break;
             case R.id.main_activity_button_server_start:
-                //if (mManager == null) return;
-                //mManager.requestConnectionInfo(mChannel,this);
-                /*serverSocketThread = new ServerSocketThread();
-                serverSocketThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                serverSocketThread.setUpdateListener(new ServerSocketThread.OnUpdateListener() {
-                    public void onUpdate(String obj) {
-                        setReceivedText(obj);
-                    }
-                });*/
-
-
-
-                //ClientSocket clientSocket1 = new ClientSocket(MainActivity.this, this, "", false, null);
-                //clientSocket1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
                 break;
             case R.id.main_activity_button_server_stop:
                 if(serverSocketThread != null) {
@@ -599,27 +480,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.main_activity_button_client_start:                    //button SEND
                 requestDestination = EditIDDestination.getText().toString();
                 String dataToSend = editTextTextInput.getText().toString();
-                //if(IS_OWNER)  {
-                    /*if(clientSocket.getSocket().isClosed()) {
-                        System.out.println("serverSocketThread.client CLOSED");
-                    }
-                    else System.out.println("serverSocketThread.client NON E' CLOSED");
-                    */
-                    //clientSocket = new ClientSocket(MainActivity.this, this, dataToSend, isRequest, null,null, null, clientSocketListener);
-                    //clientSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    /*try {
-                        sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }*/
-                    /*if(clientSocket.getSocket().isClosed()) {
-                        System.out.println("serverSocketThread.client CLOSED");
-                    }
-                    else System.out.println("serverSocketThread.client NON E' CLOSED");*/
-                    //ServerSocketThreadSender serverSocketThreadSender = new ServerSocketThreadSender(MainActivity.this,this, serverSocketThread.client, dataToSend);
-                    //serverSocketThreadSender.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    //return;
-                //}
 
                 if(device == null && requestDestination.equals("")) {        //Didn't select anything, didn't write anything
                     Toast.makeText(MainActivity.this,"Please discover and select a device OR write the destination below",Toast.LENGTH_SHORT).show();
@@ -829,7 +689,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         System.out.println("finito setText!!!");
                     }
                 }
-                //System.out.println("**** SET_RECEIVED_TEXT");
             }
         });
 
@@ -844,10 +703,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ignoreChange = true;
                     System.out.println("***** before == " + before);
                     System.out.println("***** s == " + s);
-                    //$$nameOrigin||nameDestination::visitedDevices~~requestMessage
-                    //$$Huawei p10 lite||Simo_Roz::Huawei p10 lite++device1++device2++device3~~Hi how are you?
-                    //message example $$HUAWEI P9 lite||Simo_Roz::Hi how are you?
-                    //check if 192.168.1.72 is present
 
                     int jj = 1, ii = 1, kk = 1;
                     while (s.charAt(kk) != '|' && s.charAt(kk + 1) != '|') {
@@ -922,52 +777,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 break;
                             }
                         }
-                    /*if(!found) {//ok: aggiungi
-                        seenDevicesUpdate();
-                        for (int i = 0; i < deviceListItems.length; i++) {
-                            System.out.println("device numero " + i + " si chiama " + deviceListItems[i].deviceName);
-                            String MyDeviceName = Settings.Global.getString(getContentResolver(), Settings.Global.DEVICE_NAME);
-                            System.out.println("MyDeviceName == " + MyDeviceName);
-                            //if(MyDeviceName.equals("HUAWEI P9 lite") || MyDeviceName.equals("HUAWEI HUAWEI VNS-L21") || MyDeviceName.equals("HUAWEI VNS-L21")){
-                            //    if(deviceListItems[i].deviceName.equals("Sim_Roz") || (deviceListItems[i].deviceName.equals("MAR-LX1A")) ||(deviceListItems[i].deviceName.equals("HUAWEI MAR-LX1A"))) {continue;}
-                            //}
-                            //if(MyDeviceName.equals("Sim_Roz") || MyDeviceName.equals("MAR-LX1A")){
-                            //    if(deviceListItems[i].deviceName.equals("HUAWEI P10 lite")) {continue;}
-                            //}
-                            //if(MyDeviceName.equals("HUAWEI P9 lite") || MyDeviceName.equals("HUAWEI HUAWEI VNS-L21") || MyDeviceName.equals("HUAWEI VNS-L21")){
-                            //    if(deviceListItems[i].deviceName.equals("Sim_Roz") || (deviceListItems[i].deviceName.equals("MAR-LX1A")) ||(deviceListItems[i].deviceName.equals("HUAWEI MAR-LX1A"))) {continue;}
-                            //}
-                            if(MyDeviceName.equals("Sim_Roz") || MyDeviceName.equals("MAR-LX1A")){
-                                if(deviceListItems[i].deviceName.equals("HUAWEI HUAWEI VNS-L21") || deviceListItems[i].deviceName.equals("HUAWEI VNS-L21") || deviceListItems[i].deviceName.equals("HUAWEI P9 lite")) {
-                                    System.out.println("salto HUWAEI VNS-L21");
-                                    continue;
-                                }
-                            }
-                            device = deviceListItems[i];
-                            System.out.println("******* 7");
-                            System.out.println("device numero " + i + " si chiama " + deviceListItems[i].deviceName);
-                            makeToast("from ma**a to davide");
-                            System.out.println("from ma**a to davide");
-                            connect(deviceListItems[i]);                                        //connect to each device, then send the message to all of them
-                            isRequest = true;
-                            if (!dataToSend.equals("")) {
-                                if(!IS_OWNER) {
-                                    //System.out.println("perform click owner");
-                                    //buttonConfigure.performClick();
-                                    closeSocketAndInterrupt();
-                                    ClientSocket clientSocket = new ClientSocket(MainActivity.this, MainActivity.this, dataToSend, isRequest, nameDestination, nameOrigin, seenDevices, clientSocketListener);
-                                    clientSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                    startClientSocketListener();
-                                }
-                                else{//IS_OWNER
-                                    //System.out.println("perform click NON owner");
-                                    //buttonConfigure.performClick();
-                                    ServerSocketThreadSender serverSocketThreadSender = new ServerSocketThreadSender(MainActivity.this, MainActivity.this, serverSocketThread.client, dataToSend, isRequest, nameOrigin, nameDestination, seenDevices);
-                                    serverSocketThreadSender.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                }
-                            }
-                        }
-                    }*/
                     } else {//ok
                         System.out.println("******* 8: IN TEORIA REQUEST DESTINATION E' \"\" MA NON DEVE ESSERE POSSIBILE :(");
                     }
