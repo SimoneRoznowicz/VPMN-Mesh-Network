@@ -15,9 +15,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * Created by ash on 16/2/18.
- */
 
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class ClientSocket extends AsyncTask{
@@ -43,10 +40,10 @@ public class ClientSocket extends AsyncTask{
         //AGGIUNTA IP PRIMA DEL TESTO + CARATTERE SPECIALE ("##") + data1
         if(data1 != null) {
             if(!is_request) {
-                data = data1 + '\n';    //example:   192.168.1.72##Hi how are you?
+                data = data1 + '\n';      //example: 192.168.1.72##Hi how are you?
                 //System.out.println("again1 get_IP() == " + activity.get_IP());
             }
-            else{   //is_request == true                                                    //example: $$nameOrigin||nameDestination::visitedDevices~~requestMessage
+            else{   //is_request == true  //example: $$nameOrigin||nameDestination::visitedDevices~~requestMessage
                 data = "$$" + nameOrigin + "||" + nameDestination + "::" + visitedDevices + "~~" + data1 + '\n';    //example: $$Huawei p10 lite||Simo_Roz::Huawei p10 lite++device1++device2++device3~~Hi how are you?
                 //System.out.println("again2 get_IP() == " + activity.get_IP());
             }
@@ -105,35 +102,9 @@ public class ClientSocket extends AsyncTask{
     {
         System.out.println("SEND DATA");
         String host = MainActivity.IP;
-        //AGGIUNTA
-        ///////////////////////
-        //System.out.println("get_IP() == " + mActivity.get_IP());
-        //System.out.println("IP == " + mActivity.IP);
-        System.out.println("IP_address == " + mActivity.IP_address);
-        //MainActivity.hostClient = mActivity.get_IP() == mActivity.IP? mActivity.IP_address : mActivity.IP;
-        /*if(mActivity.get_IP().equals("192.168.1.72")){
-            mActivity.hostClient = "192.168.1.68";
-        }
-        if(mActivity.get_IP().equals("192.168.1.68")){
-            mActivity.hostClient = "192.168.1.72";
-        }*/
-        //if(mActivity.arrList.size() == 0){
-            //mActivity.hostClient = mActivity.IP;
-            System.out.println("hostClient == " + mActivity.hostClient);
-        //}
-        /*else {
-            //mActivity.hostClient = mActivity.arrList.get(mActivity.device);
-            for (MainActivity.MyEntry myEntry : mActivity.arrList) {
-                if(myEntry.getKey().equals(mActivity.device)){
-                    System.out.println("--- ENTRATO");
-                    mActivity.hostClient = myEntry.getValue();
-                    System.out.println("hostClient == " + mActivity.hostClient);
-                }
-            }
-        }*/
-        //System.out.println("***** hostClient == " + mActivity.map.get(mActivity.device));
+        
+        //System.out.println("IP_address == " + mActivity.IP_address);
 
-        ////////////////////////
         int port = 8888;
         int len;
         mActivity.socket = new Socket();
@@ -153,12 +124,8 @@ public class ClientSocket extends AsyncTask{
             System.out.println("Trying to connect...");
             System.out.println("socket is connected??? " + mActivity.socket.isConnected());
 
-
-            //int y = 0;
-            //while (mActivity.socket == null || (!mActivity.socket.isConnected()) || (y<6)) {
             mActivity.socket.connect((new InetSocketAddress(mActivity.hostClient, port)), 4000);
-            //    System.out.println("PROVA NUMERO: " + ++y);
-            //}
+
             System.out.println("2 socket is connected??? " + mActivity.socket.isConnected());
 
             Log.d(ClientSocket.TAG,"Connected...");
@@ -174,21 +141,9 @@ public class ClientSocket extends AsyncTask{
             while ((len = inputStream.read(buf)) != -1) {
                 outputStream.write(buf, 0, len);
             }
-            System.out.println("ARRIVATO QUI???");
-
-            System.out.println("CLIENTSOCKET IS NULL?? " + this == null);
-
-            System.out.println("SORPASSATO WHILE");
-/*
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mActivity.textViewReceivedData.setText(data);
-                    System.out.println("handler.post clientSocket: data == " + data);
-                }
-            });
-*/
-
+            //System.out.println("ARRIVATO QUI???");
+            //System.out.println("CLIENTSOCKET IS NULL?? " + this == null);
+            //System.out.println("SORPASSATO WHILE");
 
 
         } catch (IOException e) {
