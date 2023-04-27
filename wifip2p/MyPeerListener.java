@@ -10,9 +10,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ash on 14/2/18.
- */
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MyPeerListener implements WifiP2pManager.PeerListListener {
